@@ -224,26 +224,52 @@ La mayoría de las aplicaciones necesitan algún tipo de búsqueda o funcionalid
 
 Esta parte del tutorial muestra cómo incluir la funcionalidad de filtrado en la lista de customers creada en el paso anterior. Para implementar el filtro, agregue un campo de texto sobre el Grid y agregue un botón para borrar la entrada.
 
-Img – 5 -
+:imagesdir: ./images/
 
-Adicionar un componente de TextField
+image::Imagen4.png[Imagen4]
 
-Para adicionar un componente TextField:
+*Adicionar un componente de TextField*
 
-1.	En la clase MainView, introduzca una variable de instancia del tipo TextField de la siguiente manera:
+Para adicionar un componente `TextField`:
 
-Codigo – 1 –
+. En la clase `MainView`, introduzca una variable de instancia del tipo `TextField` de la siguiente manera:
 
-2.	Configure el campo de texto para que muestre un placeholder y un botón borrar, agregando el siguiente código al inicio del constructor:
+[source, java]
+----
+...
+public class MainView extends VerticalLayout {
 
-Codigo -2- 
-1.	setPlaceholder muestra la cadena dada en el campo. Cuando el usuario comienza a escribir, el placeholder se elimina automáticamente.
+    ...
+    private TextField filterText = new TextField();
 
-2.	setClearButtonVisible añade un botón de borrar (X) que se muestra en el lado derecho del campo de texto.
+    ...
+}
+----
+[start=2]
+.	Configure el campo de texto para que muestre un placeholder y un botón borrar, agregando el siguiente código al inicio del constructor:
 
-3.	Cambie la línea de código add(grid) para incluir el componente filterText de la siguiente manera:
+[source, java]
+----
+public MainView() {
 
-Codigo -3-
+    filterText.setPlaceholder("Filter by name...");
+    filterText.setClearButtonVisible(true);
+
+    ...
+}
+----
+[arabic,start=1]
+..	`setPlaceholder` muestra la cadena dada en el campo. Cuando el usuario comienza a escribir, el placeholder se elimina automáticamente.
+
+..	`setClearButtonVisible` añade un botón de borrar (X) que se muestra en el lado derecho del campo de texto.
+
+[start=3]
+.	Cambie la línea de código `add(grid)` para incluir el componente `filterText` de la siguiente manera:
+
+[source, java]
+----
+add(filterText, grid);
+----
 
 Filtrar los datos
 Para hacer que el filtro sea funcional:
