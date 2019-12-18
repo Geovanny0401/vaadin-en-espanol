@@ -1,0 +1,664 @@
+*CRUD app tutorial*
+
+*Configuración del Proyecto:*
+
+Este tutorial muestra cómo construir una aplicación *_CRUD_* (Create, Read, Update, Delete) usando la API Java Vaadin.
+
+Todo lo que necesitas son conocimientos básicos de programación, un link:https://en.wikipedia.org/wiki/Integrated_development_environment[IDE] como link:https://en.wikipedia.org/wiki/IntelliJ_IDEA[IntelliJ IDEA], link:https://jdk.java.net/[JDK] versión 8 o posterior. Este tutorial debe tardar entre 20 a 60 minutos en completarse, dependiendo de tú experiencia.
+
+*Descripción general*
+
+Tú va a construir una aplicación básica para gestionar los datos de los clientes. Para mantener las cosas simples, la aplicación no se conectará a una base de datos real, pero usará un módulo de servicio en memoria en su defecto. Podrá utilizar los conceptos explicados en este tutorial para conectar tus aplicaciones de Vaadin a un back-end del mundo real con la tecnología de persistencia de tú preferencia.
+
+La aplicación mostrará una página web con una tabla (llamada link:https://vaadin.com/components/vaadin-grid[Grid] en Vaadin) con capacidades de filtrado y funcionalidad para agregar, eliminar y actualizar los datos de los clientes.
+
+:imagesdir: ./images/
+
+image::Imagen1.png[Imagen1]
+
+Tu puedes utilizar la aplicación como punto de partida para más experimentos con Vaadin. Por ejemplo, puedes agregar nuevas vistas, crear un tema personalizado, utilizar link:https://vaadin.com/directory/[add-ons], y optimizarlo para dispositivos móviles.
+
+Si tú no quieres codificarlo desde cero, puedes link:https://github.com/vaadin/tutorial/tree/vaadin10+[descargar la aplicación final] y experimentar con ella.
+
+*Instalación de las Herramientas de Desarrollo*
+
+Asegúrese de tener instalado el JDK versión 8 o posterior y que éste actualizada.
+
+TIP: La mayoría de las distribuciones de Linux pueden usar gestores de paquetes para instalar el JDK. Los usuarios de Windows y Mac pueden descargar el JDK desde jdk.java.net.
+
+Este tutorial utiliza link:https://www.jetbrains.com/idea/[IntelliJ IDEA], pero puedes usar cualquier otro IDE de Java.
+
+Si prefiere Eclipse o NetBeans, puedes ver:
+
+•	link:https://vaadin.com/learn/tutorials/import-maven-project-eclipse[Importación de un proyecto Maven en Eclipse.]
+
+•	link:https://vaadin.com/learn/tutorials/import-maven-project-netbeans[Importación de un proyecto Maven en NetBeans.]
+
+*Creación del proyecto*
+
+La manera más fácil de crear un nuevo proyecto Vaadin es usar el *Project Base* starter.
+Un starter es un proyecto stub listo para usar que incluye configuración, dependencias y código de ejemplo.
+
+Para generar un nuevo proyecto Vaadin:
+
+. Vaya a https://vaadin.com/start/
+
+. En el formulario, seleccione *Plain Java Servlet* como la *Tecnología stack*, a continuación ingrese:
+[arabic, start=1]
+.. *Gropu ID:* `org.vaadin.example`.
+.. *App Name:* `webapp`.
+
+. Clic en *Descargar* y extraer el archivo `webapp.zip`. Si el botón *Descargar* no está activo, es posible que tenga que iniciar sesión.
+
+Importar el proyecto en IntelliJ IDEA:
+
+. Clic en la opción *Open* en la ventana de bienvenido o seleccione *File > Open*.
+
+. Seleccione el archivo `pom.xml` en el directorio `webapp`.
+
+. Clic en *Open* y *Open as project* cuando se solicite.
+
+IntelliJ IDEA descargará las dependencias requeridas y construirá el proyecto.
+
+NOTE: Si esta es tu primera aplicación Vaadin, la construcción del proyecto puedes tardar un poco más (dependiendo de la velocidad de tu red), ya que las librerías necesitan ser descargadas. link:https://vaadin.com/learn/tutorials/learning-maven-concepts[Maven] los almacena en caché en un sistema de archivos local y la creación de tu próximo proyecto Vaadin basado en Maven será mucho más rápida.
+
+*Visualización de los Archivos Generado en el Proyecto* 
+
+Echa un vistazo a algunos de los archivos generado del proyecto:
+
+*	`webapp/pom.xml`: Este archivo define el proyecto. Contiene la configuración para construir el proyecto y declara las dependencias requeridas (bibliotecas externas). El archivo `pom.xml` es la forma en que link:https://vaadin.com/learn/tutorials/learning-maven-concepts[Maven] representa un proyecto de software.
+
+* `webapp/src/main/java`: Este directorio contiene el código Java organizado en paquetes. En este punto, sólo hay un paquete, `org.vaadin.example`, que contiene `MainView`: una clase de Java que implementa la interfaz de usuario web usando Vaadin:
+
+[source,java]
+----
+/**
+ * The main view contains a button and a click listener.
+ */
+@Route("")
+@PWA(name = "Project Base for Vaadin Flow", shortName = "Project Base")
+public class MainView extends VerticalLayout {
+
+    public MainView() {
+        Button button = new Button("Click me",
+                event -> Notification.show("Clicked!"));
+        add(button);
+    }
+}
+----
+
+
+* La anotación `@Route` le dice a Vaadin que dirija la URL raíz a esta vista. El parámetro URL es opcional y se deriva del nombre de la clase, si no se ha dado.
+
+* La anotación `@PWA` le dice a Vaadin que active las características automáticas de link:https://vaadin.com/pwa[PWA]. Esta anotación es opcional.
+
+* La vista amplía `VerticalLayout`, que muestra los componentes verticalmente.
+
+*	El constructor de `MainView`:
+
+** Crea un botón con el texto *Click me* sobre él.
+** Añade un click *_listener_* (usando una expresión lambda) que muestra una link:https://vaadin.com/components/vaadin-notification[notificación] cuando el usuario presiona click en el botón.
+** Adicione el botón al `VerticalLayout`.
+
+*Ejecutar la aplicación*
+
+Para ejecutar la aplicación:
+
+. Abre la vista *Maven* y localiza *jetty:run* en *webapp > Plugins > jetty*.
+
+. Doble Click en *Jetty:run* para construir la aplicación y desplegarla en un servidor Jetty.
+
+:imagesdir: ./images/
+
+image::Imagen2.png[Imagen2]
+
+[start=3]
+. Una vez iniciado el servidor, abra en el navegador http://localhost:8080 para ver la aplicación en acción.
+
+NOTE: Puedes hacer cambios en el código y compilar el proyecto, seleccionando *Build > Build Project* en IntelliJ IDEA. El servidor Jetty detecta los cambios y los despliega automáticamente en pocos segundos. Es posible que tenga que recargar la página en el navegador para reflejar los cambios.
+
+TIP: Para que el ciclo de implementación sea más fluido, muchos desarrolladores de Java utilizan link:https://www.jrebel.com/products/jrebel[JRebel] (agente comercial de JVM) o link:https://vaadin.com/blog/developing-without-server-restarts[similar], para permitir una sustitución sin problemas del " hot-code " (código caliente).
+
+Si quieres usar puntos de ruptura en tu código, inicia el servidor en modo debug haciendo click derecho en el mouse *jetty:run* y seleccionando *Debug ‘webapp[Jetty:run]’*.
+
+*Listando Entidades en un Grid - Tutorial  de Vaadin CRUD parte 2*
+
+Esta parte del tutorial muestra cómo visualizar los datos en un link:https://vaadin.com/components/vaadin-grid[componente Grid].
+
+*Agregar los objetos de dominio*
+
+Antes de entrar en el desarrollo web real con Vaadin, necesitas añadir los objetos de dominio necesarios y un back-end simulado.
+
+Copia o descarga las siguientes tres clases de Java de GitHub y agrégalas a tu proyecto:
+
+* link:https://raw.githubusercontent.com/vaadin/tutorial/vaadin10%2B/src/main/java/com/vaadin/example/CustomerStatus.java[CustomerStatus.java]: Este es un tipo de enumeración simple.
+
+* link:https://raw.githubusercontent.com/vaadin/tutorial/vaadin10%2B/src/main/java/com/vaadin/example/Customer.java[Customer.java]: Este es el objeto de dominio principal, un Java bean básico que encapsula los datos de un Customer.
+
+* link:https://raw.githubusercontent.com/vaadin/tutorial/vaadin10%2B/src/main/java/com/vaadin/example/CustomerService.java[CustomerService.java]: Esta es una clase de servicio simple que puedes usar para obtener y guardar instancias de `Customer`. Piensa en esta clase como el punto de entrada a una base de datos ficticia.
+
+TIP: Una forma rápida de copiar clases en IntelliJ IDEA es usar el clipboard. En el navegador, seleccione el contenido del archivo y elija *Edit > Copy*. En IntelliJ IDEA, haga clic con el botón derecho en `org.vaadin.example` en la vista *Project* y seleccione *Paste*. IntelliJ IDEA es lo suficientemente inteligente como para crear automáticamente un archivo Java con el nombre adecuado.
+
+NOTE: La implementación actual de estas clases no es relevante para este tutorial, pero siéntase libre de explorarlas. En una aplicación del mundo real, lo más probable es que tenga algo similar, pero implementado con JPA, y EJB o Spring-managed beans, por ejemplo.
+
+*Visualización de datos en un Grid*
+
+Al crear interfaces de usuario para aplicaciones centradas en datos, frecuentemente se inicializa por listar los datos desde un back-end. Vaadin ofrece varios link:https://vaadin.com/components[componentes] y formas de hacerlo. Este tutorial utiliza el componente `Grid` para presentar los datos en una tabla. Los datos proceden del back-end ficticio que agregaste en la sección anterior.
+
+Para mostrar los datos en un componente `Grid`:
+
+. En la clase `MainView`, adiciona una referencia a la clase `CustomerService` e introduzca una variable de instancia del tipo `Grid` como se indica a continuación:
+
+[source, java]
+----
+...
+public class MainView extends VerticalLayout {
+
+    private CustomerService service = CustomerService.getInstance();
+    private Grid<Customer> grid = new Grid<>(Customer.class);
+
+    public MainView() {
+        ...
+    }
+}
+----
+
+TIP: Puedes corregir los errores de compilación mostrados en rojo utilizando el acceso directo [Alt+Enter] (Windows) u [Opción+Enter] (Mac). Posicione el cursor justo después del error en rojo (por ejemplo, `Grid`) y, a continuación, utilice el acceso directo. Asegúrese de elegir la clase correcta del paquete `org.vaadin`.
+
+[start=2]
+. El componente `Grid` utiliza columnas y filas para visualizar los datos. Configure las columnas reemplazando el constructor de la clase `MainView` por:
+
+[source, java]
+----
+...
+    public MainView() {
+        grid.setColumns("firstName", "lastName", "status");
+
+        add(grid);
+
+        setSizeFull();
+    }
+...
+----
+
+[start=1]
+. `setColumns` configura el `Grid` para que muestre las propiedades `firstName`, `lastName` y `status` de la clase `Customer`.
+
+. `add(grid)` agrega el `Grid` al `VerticalLayout`.
+
+. `setSizeFull` establece la altura y el ancho del `VerticalLayout` al 100% para que utilice todo el espacio disponible en el navegador.
+
+TIP: Como alternativa, puedes utilizar el método `addColumn(ValueProvider)` para adicionar columnas de una manera segura para el tipo. Por ejemplo, para añadir una columna para la propiedad `firstName`, llamar a `grid.addColumn(Customer::getFirstName)`.
+
+[start=3]
+. En este punto, las columnas de `Grid` están listas, pero aún no hay filas. Para añadir líneas, utilice el método `setItems(Customer...)`. Puesto que más adelante en el tutorial necesitarás refrescar las filas, tiene sentido crear un método para esto ahora. Cree un nuevo método `updateList()` y llámelo desde el constructor de la siguiente manera:
+
+[source, java]
+----
+...
+    public MainView() {
+        ...
+
+        updateList();
+    }
+
+    public void updateList() {
+        grid.setItems(service.findAll());
+    }
+...
+----
+
+[start=4]
+. Compila el proyecto, seleccionando *Build > Build Project* en IntelliJ IDEA, y actualiza tu navegador para ver los cambios.
+
+:imagesdir: ./images/
+
+image::Imagen3.png[Imagen3]
+ 
+
+*Filtrando Entidades en un Grid - Tutorial de Vaadin CRUD parte 3*
+
+*Filtrando Entidades en un Grid*
+
+La mayoría de las aplicaciones necesitan algún tipo de búsqueda o funcionalidad de filtrado y su implementación es un buen ejercicio para aprender Vaadin.
+
+Esta parte del tutorial muestra cómo incluir la funcionalidad de filtrado en la lista de customers creada en el paso anterior. Para implementar el filtro, agregue un campo de texto sobre el Grid y agregue un botón para borrar la entrada.
+
+:imagesdir: ./images/
+
+image::Imagen4.png[Imagen4]
+
+*Adicionar un componente de TextField*
+
+Para adicionar un componente `TextField`:
+
+. En la clase `MainView`, introduzca una variable de instancia del tipo `TextField` de la siguiente manera:
+
+[source, java]
+----
+...
+public class MainView extends VerticalLayout {
+
+    ...
+    private TextField filterText = new TextField();
+
+    ...
+}
+----
+[start=2]
+.	Configure el campo de texto para que muestre un placeholder y un botón borrar, agregando el siguiente código al inicio del constructor:
+
+[source, java]
+----
+public MainView() {
+
+    filterText.setPlaceholder("Filter by name...");
+    filterText.setClearButtonVisible(true);
+
+    ...
+}
+----
+[arabic,start=1]
+..	`setPlaceholder` muestra la cadena dada en el campo. Cuando el usuario comienza a escribir, el placeholder se elimina automáticamente.
+
+..	`setClearButtonVisible` añade un botón de borrar (X) que se muestra en el lado derecho del campo de texto.
+
+[start=3]
+.	Cambia la línea de código `add(grid)` para incluir el componente `filterText` de la siguiente manera:
+
+[source, java]
+----
+add(filterText, grid);
+----
+
+*Filtrar los datos*
+
+Para hacer que el filtro sea funcional:
+
+.	Agregue el siguiente código justo después de la configuración de filterText: 
+[source, java]
+----
+public MainView() {
+
+    ...
+    filterText.setValueChangeMode(ValueChangeMode.EAGER);
+    filterText.addValueChangeListener(e -> updateList());
+
+    ...
+}
+----
+
+. `ValueChangeMode.EAGER` asegura que los eventos de cambio se activen link:https://vaadin.com/api/platform/14.1.2/com/vaadin/flow/data/value/ValueChangeMode.html[inmediatamente] cuando el usuario escribe.
+. `addValueChangeListener` agrega un receptor de cambio de valor que reacciona a los cambios en el valor del campo de texto.
+
+[start=2]
+.	El receptor de cambio de valor llama al método `updateList()` que aún no usa el valor en el filtro. Para configurarlo que utilice este valor, cambie la línea en el método `updateList()` para enviar el valor a la llamada de servicio (backend):
+
+[source, java]
+----
+public void updateList() {
+    grid.setItems(service.findAll(filterText.getValue()));
+}
+----
+
+. `filterText.getValue()` retorna la cadena actual en el campo de texto.
+
+[start=3]
+.	Compila el proyecto seleccionando *Build > Build Project* en IntelliJ IDEA, y actualiza tu navegador para ver los cambios. Compruebe que el filtro funciona como se espera.
+
+Para referencia, aquí está la implementación completa de la clase `MainLayout` en este punto:
+
+[source, java]
+----
+@Route("")
+@PWA(name = "Project Base for Vaadin Flow", shortName = "Project Base")
+public class MainView extends VerticalLayout {
+
+    private CustomerService service = CustomerService.getInstance();
+    private Grid<Customer> grid = new Grid<>(Customer.class);
+    private TextField filterText = new TextField();
+
+    public MainView() {
+        filterText.setPlaceholder("Filter by name...");
+        filterText.setClearButtonVisible(true);
+        filterText.setValueChangeMode(ValueChangeMode.EAGER);
+        filterText.addValueChangeListener(e -> updateList());
+
+        grid.setColumns("firstName", "lastName", "status");
+
+        add(filterText, grid);
+
+        setSizeFull();
+
+        updateList();
+    }
+
+    public void updateList() {
+        grid.setItems(service.findAll(filterText.getValue()));
+    }
+
+}
+----
+
+*Formularios y data binding – Tutorial de Vaadin CRUD parte 4*
+
+*Formularios y data binding*
+
+Esta parte del tutorial muestra cómo implementar un formulario reutilizable para editar datos.
+
+:imagesdir: ./images/
+
+image::Imagen5.png[Imagen5]
+
+Hasta ahora, toda la codificación de la interfaz ha sido en una clase, `MainView`. Sin embargo, también puedes utilizar la composición orientada a objetos para crear componentes de interfaz de usuario reutilizables con Vaadin. Un formulario de customer es un candidato perfecto para demostrar cómo implementar y utilizar un componente de interfaz de usuario reutilizable.
+
+*Adición de botones y campos de entrada*
+
+.	Comience por crear una nueva clase en IntelliJ IDEA:
+
+[start=1]
+.	Clic derecho en el paquete *org.vaadin.example* y seleccione *New > Java Class*.
+
+. En el campo *Name*, escriba `CustomerForm` y de click en *OK*.
+
+[start=2]
+. Para hacer de esta clase un componente de interfaz de usuario de Vaadin, necesita extender un componente existente. Extienda el componente `FormLayout` como se indica a continuación:
+
+[source, java]
+----
+public class CustomerForm extends FormLayout {
+}
+----
+
+[start=3]
+.	El formulario necesita un campo de entrada para editar cada propiedad en la clase `Customer`. Vaadin proporciona diferentes link:https://vaadin.com/components[tipos de campos] para editar diferentes tipos de valores. Utilizamos los componentes `TextField`, `ComboBox` y `DatePicker`. Defina las siguientes variables de instancia en la clase `CustomerForm`:
+
+[source, java]
+----
+
+private TextField firstName = new TextField("First name");
+private TextField lastName = new TextField("Last name");
+private ComboBox<CustomerStatus> status = new ComboBox<>("Status");
+private DatePicker birthDate = new DatePicker("Birthdate");
+----
+
+[start=4]
+.	El formulario también necesita dos botones para guardar y eliminar instancias de `Customer`. Agregue los botones a la clase `CustomerForm` de la siguiente manera:
+
+[source, java]
+----
+private Button save = new Button("Save");
+private Button delete = new Button("Delete");
+----
+
+[start=5]
+.	Con los componentes en su posición, pueden configurarse y agregarlos al formulario. Un buen lugar para hacer esto es el constructor. Agregue el siguiente constructor a la clase `CustomerForm`:
+
+[source, java]
+----
+public CustomerForm() {
+    status.setItems(CustomerStatus.values());
+
+    HorizontalLayout buttons = new HorizontalLayout(save, delete);
+    save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+    add(firstName, lastName, status, birthDate, buttons);
+}
+----
+
+. `status.setItems` adiciona todos los valores enum como opciones al `ComboBox`.
+
+. `addThemeVariants` resalta el botón de guardar decorándolo con un nombre de estilo.
+
+*Visualizar y Ocultar el Formulario*
+
+Debería ser posible mostrar los datos correspondientes de una instancia específica del `Customer` en el formulario, y ocultarlo cuando sea necesario.
+
+.	Para visualizar los datos de un cliente específicos en el formulario, es necesario conectar las propiedades de una instancia de `Customer` determinada a los campos de entrada del formulario. Esto se conoce como data binding, y Vaadin proporciona la clase auxiliar `Binder` para este propósito. Para enlazar los datos, agregue una nueva propiedad de tipo `Binder` a la clase `CustomerForm` y configúrela en el constructor como se indica a continuación:
+
+[source, java]
+----
+private Binder<Customer> binder = new Binder<>(Customer.class);
+
+public CustomerForm() {
+    ...
+
+    binder.bindInstanceFields(this);
+}
+----
+
+. El método `bindInstanceFields(this)` procesa todas las variables de instancia que son campos de entrada (por ejemplo, `TextField` y `ComboBox`) y las asigna a las propiedades Java en la clase `Customer` que coincide por nombre. Por ejemplo, `Customer::firstName` se asigna al campo de entrada `CustomerForm::firstName`.
+
+. Puedes anular la asignación automática utilizando la anotación `@PropertyId` en los campos de entrada `CustomerForm` para declarar explícitamente las variables de instancia de `Customer` correspondientes.
+
+[start=2]
+.	Puedes implementar la lógica para visualizar u ocultar el formulario en un solo método público. Para ello, agregue el siguiente código a la clase `CustomerForm`:
+
+[source, java]
+----
+public void setCustomer(Customer customer) {
+    binder.setBean(customer);
+
+    if (customer == null) {
+        setVisible(false);
+    } else {
+        setVisible(true);
+        firstName.focus();
+    }
+}
+----
+
+
+. `setBean` conecta los valores del objeto de `customer` con los campos de entrada correspondientes del formulario. Cuando el usuario cambia el valor de un campo de entrada, el valor se fija en la variable de instancia correspondiente del objeto de `customer`.
+
+. Cuando el `customer` está:
+
+[start=1]
+. `nulo`, el formulario está oculto.
+
+. no es `nulo`, se muestra el formulario y el cursor del teclado y se coloca en el campo de entrada *First Name* para permitir la escritura inmediata.
+
+*Implementación de las operaciones Guardar y borrar*
+
+.	Para asegurar que las operaciones de guardar y eliminar actualicen la lista de customers de la clase `MainView`, necesitamos agregar una referencia a esta clase. Tú puedes recibir esta referencia en el constructor del `CustomerForm` de la siguiente manera:
+
+[source, java]
+----
+
+private MainView mainView;
+
+public CustomerForm(MainView mainView) {
+    this.mainView = mainView;
+
+    ...
+}
+
+----
+
+[start=2]
+. Las operaciones de guardar y borrar también deben hacer referencia a la clase `CustomerService`. Agregue una referencia en la clase `CustomerForm` de la siguiente manera:
+
+[source, java]
+----
+private CustomerService service = CustomerService.getInstance();
+----
+
+[start=3]
+.	Con las variables de `service` y `mainView` en su lugar, implemente la operación de guardar de la siguiente manera:
+
+[source, java]
+----
+public CustomerForm(MainView mainView) {
+    ...
+
+    save.addClickListener(event -> save());
+}
+
+...
+
+private void save() {
+    Customer customer = binder.getBean();
+    service.save(customer);
+    mainView.updateList();
+    setCustomer(null);
+}
+----
+
+[start=1]
+. `getBean` obtiene la instancia de `customer` que estaba vinculada a los campos de entrada del formulario.
+. `service.save(customer)` realiza la operación de guardar en el backend.
+. `updateList` actualiza la lista de los clientes en la vista principal.
+. `setCustomer(null)` oculta el formulario.
+
+[start=4]
+. Del mismo modo, ejecute la operación de eliminar como se indica a continuación:
+
+[source, java]
+----
+public CustomerForm(MainView mainView) {
+    ...
+    delete.addClickListener(event -> delete());
+}
+
+...
+
+private void delete() {
+    Customer customer = binder.getBean();
+    service.delete(customer);
+    mainView.updateList();
+    setCustomer(null);
+}
+----
+
+
+NOTE: En un proyecto del mundo real, debe introducir una interfaz para evitar el acoplamiento con la clase MainView. Alternativamente, puede utilizar un sistema de eventos, como los eventos CDI, para desacoplar completamente los componentes. Para mantener las cosas simples, dejamos esto fuera del alcance de este tutorial.
+
+*Adición del formulario a la vista principal*
+
+. Para agregar el formulario a la vista principal, agregue el formulario como una nueva variable de instancia en la clase `MainView`:
+
+[source, java]
+----
+public class MainView extends VerticalLayout {
+
+    ...
+    private CustomerForm form = new CustomerForm(this);
+
+    ...
+}
+----
+
+[start=2]
+. Para visualizar el formulario a la derecha de la `grid`, en la clase `MainView` introduzca un `HorizontalLayout` para enlazar la `grid` y los componentes `customerForm`. Reemplace la línea de código `add(filterText, grid)` por la siguiente:
+
+[source, java]
+----
+HorizontalLayout mainContent = new HorizontalLayout(grid, form);
+mainContent.setSizeFull();
+grid.setSizeFull();
+
+add(filterText, mainContent);
+----
+
+[start=3]
+. Compila el proyecto, seleccionando *Build > Build Project* en IntelliJ IDEA, y actualiza tu navegador para ver los cambios.
+
+:imagesdir: ./images/
+
+image::Imagen6.png[Imagen6]
+
+NOTE: Los botones *Guardar* y *Eliminar* no funcionan en este momento, lo agregaremos en la siguiente parte del tutorial.
+
+
+
+*Conectando el formulario a la aplicación - Tutorial de Vaadin CRUD parte 5*
+
+*Conexión del formulario a la aplicación*
+
+Esta parte del tutorial muestra cómo conectar el componente `CustomerForm` (implementado en el paso anterior) a la aplicación.
+
+*Visualizar y Ocultar el Formulario*
+
+El método `setCustomer(Customer)` en la clase `CustomerForm` oculta el formulario si el cliente especificado es `nulo`, y lo muestra si el cliente está definido.
+
+. Inicialmente, cuando no se selecciona ningún customer en el `Grid`, el formulario debe estar oculto. Ocultar el formulario configurando a un cliente `nulo` en el constructor de la clase `MainView` de la siguiente manera:
+
+[source, java]
+----
+public MainView() {
+
+    ...
+    form.setCustomer(null);
+}
+----
+
+[start=2]
+.	Para detectar cuando el usuario selecciona o deselecciona una fila en el  `Grid`, es necesario implementar un receptor de cambio de valor. Agregue lo siguiente al final del constructor `MainView`: 
+
+[source, java]
+----
+grid.asSingleSelect().addValueChangeListener(event ->
+        form.setCustomer(grid.asSingleSelect().getValue()));
+
+----
+
+
+. `addValueChangeListener` adiciona un receptor a un `Grid`. El componente `Grid` soporta los modos de link:https://vaadin.com/api/platform/com/vaadin/flow/component/grid/Grid.SelectionMode.html[selección múltiple y simple]. Este ejemplo utiliza el modo de selección simple a través del método `asSingleSelect()`.
+
+. `setCustomer` define el customer seleccionado en el `CustomerForm`. Esta línea también utiliza el modo de selección única.
+
+. El método `getValue()` devuelve al `Customer` en la fila seleccionada o `nulo` si no hay selección, mostrando u ocultando el formulario en consecuencia.
+
+[start=3]
+. Compila el proyecto seleccionando *Build > Build Project* en IntelliJ IDEA, y actualiza tu navegador para ver los cambios.
+
+El formulario está ahora "conectado" al `Grid`.
+
+. Cuando el usuario selecciona una línea, los datos se copian en los campos de entrada,
+. Cuando el usuario deselecciona una línea, el formulario se oculta.
+. Los botones Guardar y Eliminar funcionan.
+
+*Agregar Nuevos Clientes*
+
+Para agregar la funcionalidad de crear nuevos clientes, agregue un botón superior en el `Grid`, junto al componente `filterText`.
+
+. Agregue un nuevo `Button` con un receptor de click, agregando las siguientes líneas de código al constructor `MainView`, directamente después de la configuración de filterText:
+
+[source, java]
+----
+Button addCustomerBtn = new Button("Add new customer");
+addCustomerBtn.addClickListener(e -> {
+    grid.asSingleSelect().clear();
+    form.setCustomer(new Customer());
+});
+----
+
+. `clear` elimina una posible selección anterior del formulario en el `grid`.
+
+. `setCustomer` instancia un nuevo objeto de customer y lo pasa al `CustomerForm` para su edición.
+
+[start=2]
+. Para colocar el botón junto al componente `filterText`, utilice `HorizontalLayout` que envuelva los componentes `filterText` y `addCustomerBtn`. Introduzca el nuevo layout directamente después de la llamada anterior a `addCustomerBtn`, de la siguiente manera:
+
+[source, java]
+----
+HorizontalLayout toolbar = new HorizontalLayout(filterText,
+    addCustomerBtn);
+----
+
+[start=3]
+.	Agregue el `toolbar`, reemplazando la línea de código `add(filterText, mainContent);` por la siguiente:
+
+[source, java]
+----
+add(toolbar, mainContent);
+----
+
+
+. Compila el proyecto, seleccionando *Build > Build Project* en IntelliJ IDEA, y actualiza tu navegador para ver los cambios. Los usuarios ahora pueden crear registros de clientes que se almacenan en el back-end de la demo.
+
+:imagesdir: ./images/
+
+image::Imagen1.png[Imagen1]
+
+Felicitaciones! Acabas de crear tu primera aplicación con Vaadin!
+
