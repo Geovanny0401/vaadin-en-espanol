@@ -8,7 +8,7 @@ Todo lo que necesitas son conocimientos básicos de programación, un link:https
 
 *Descripción general*
 
-Tú va a construir una aplicación básica para gestionar los datos de los clientes. Para mantener las cosas simples, la aplicación no se conectará a una base de datos real, pero usará un módulo de servicio en memoria en su defecto. Podrá utilizar los conceptos explicados en este tutorial para conectar tus aplicaciones de Vaadin a un back-end del mundo real con la tecnología de persistencia de tú preferencia.
+Tú vas a construir una aplicación básica para gestionar los datos de los clientes. Para mantener las cosas simples, la aplicación no se conectará a una base de datos real, pero usará un módulo de servicio en memoria en su defecto. Podrá utilizar los conceptos explicados en este tutorial para conectar tus aplicaciones de Vaadin a un back-end del mundo real con la tecnología de persistencia de tú preferencia.
 
 La aplicación mostrará una página web con una tabla (llamada link:https://vaadin.com/components/vaadin-grid[Grid] en Vaadin) con capacidades de filtrado y funcionalidad para agregar, eliminar y actualizar los datos de los clientes.
 
