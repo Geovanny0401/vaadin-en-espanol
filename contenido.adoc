@@ -2,13 +2,21 @@
 
 *Configuración del Proyecto:*
 
+<<<<<<< HEAD
+Este tutorial muestra cómo construir una aplicación bold italic *_CRUD_* (Create, Read, Update, Delete) usando la API Java Vaadin.
+=======
 Este tutorial muestra cómo construir una aplicación *_CRUD_* (Create, Read, Update, Delete) usando la API Java Vaadin.
+>>>>>>> Actualizacion del documento
 
 Todo lo que necesitas son conocimientos básicos de programación, un link:https://en.wikipedia.org/wiki/Integrated_development_environment[IDE] como link:https://en.wikipedia.org/wiki/IntelliJ_IDEA[IntelliJ IDEA], link:https://jdk.java.net/[JDK] versión 8 o posterior. Este tutorial debe tardar entre 20 a 60 minutos en completarse, dependiendo de tú experiencia.
 
 *Descripción general*
 
+<<<<<<< HEAD
+Tú va a construir una aplicación básica para gestionar los datos de los clientes. Para mantener las cosas simples, la aplicación no se conectará a una base de datos real, pero usará un módulo de servicio en memoria en su defecto. Podrá utilizar los conceptos explicados en este tutorial para conectar sus aplicaciones Vaadin a un back-end del mundo real con la tecnología de persistencia de su preferencia.
+=======
 Tú va a construir una aplicación básica para gestionar los datos de los clientes. Para mantener las cosas simples, la aplicación no se conectará a una base de datos real, pero usará un módulo de servicio en memoria en su defecto. Podrá utilizar los conceptos explicados en este tutorial para conectar tus aplicaciones de Vaadin a un back-end del mundo real con la tecnología de persistencia de tú preferencia.
+>>>>>>> Actualizacion del documento
 
 La aplicación mostrará una página web con una tabla (llamada link:https://vaadin.com/components/vaadin-grid[Grid] en Vaadin) con capacidades de filtrado y funcionalidad para agregar, eliminar y actualizar los datos de los clientes.
 
@@ -97,7 +105,11 @@ public class MainView extends VerticalLayout {
 *	El constructor de `MainView`:
 
 ** Crea un botón con el texto *Click me* sobre él.
+<<<<<<< HEAD
+** Añade un click bold italic *_listener_* (usando una expresión lambda) que muestra una link:https://vaadin.com/components/vaadin-notification[notificación] cuando el usuario presiona click en el botón.
+=======
 ** Añade un click *_listener_* (usando una expresión lambda) que muestra una link:https://vaadin.com/components/vaadin-notification[notificación] cuando el usuario presiona click en el botón.
+>>>>>>> Actualizacion del documento
 ** Adicione el botón al `VerticalLayout`.
 
 *Ejecutar la aplicación*
@@ -350,7 +362,11 @@ Esta parte del tutorial muestra cómo implementar un formulario reutilizable par
 
 image::Imagen5.png[Imagen5]
 
+<<<<<<< HEAD
+Hasta ahora, toda la codificación de la interfaz ha sido en una clase, `MainView`. Sin embargo, también puede utilizar la composición orientada a objetos para crear componentes de interfaz de usuario reutilizables con Vaadin. Un formulario de customer es un candidato perfecto para demostrar cómo implementar y utilizar un componente de interfaz de usuario reutilizable.
+=======
 Hasta ahora, toda la codificación de la interfaz ha sido en una clase, `MainView`. Sin embargo, también puedes utilizar la composición orientada a objetos para crear componentes de interfaz de usuario reutilizables con Vaadin. Un formulario de customer es un candidato perfecto para demostrar cómo implementar y utilizar un componente de interfaz de usuario reutilizable.
+>>>>>>> Actualizacion del documento
 
 *Adición de botones y campos de entrada*
 
@@ -392,7 +408,11 @@ private Button delete = new Button("Delete");
 ----
 
 [start=5]
+<<<<<<< HEAD
+.	Con los componentes en su posición, puede configurarse y agregarlos al formulario. Un buen lugar para hacer esto es el constructor. Agregue el siguiente constructor a la clase `CustomerForm`:
+=======
 .	Con los componentes en su posición, pueden configurarse y agregarlos al formulario. Un buen lugar para hacer esto es el constructor. Agregue el siguiente constructor a la clase `CustomerForm`:
+>>>>>>> Actualizacion del documento
 
 [source, java]
 ----
@@ -428,10 +448,17 @@ public CustomerForm() {
 
 . El método `bindInstanceFields(this)` procesa todas las variables de instancia que son campos de entrada (por ejemplo, `TextField` y `ComboBox`) y las asigna a las propiedades Java en la clase `Customer` que coincide por nombre. Por ejemplo, `Customer::firstName` se asigna al campo de entrada `CustomerForm::firstName`.
 
+<<<<<<< HEAD
+. Puede anular la asignación automática utilizando la anotación `@PropertyId` en los campos de entrada `CustomerForm` para declarar explícitamente las variables de instancia de `Customer` correspondientes.
+
+[start=2]
+.	Puede implementar la lógica para visualizar u ocultar el formulario en un solo método público. Para ello, agregue el siguiente código a la clase `CustomerForm`:
+=======
 . Puedes anular la asignación automática utilizando la anotación `@PropertyId` en los campos de entrada `CustomerForm` para declarar explícitamente las variables de instancia de `Customer` correspondientes.
 
 [start=2]
 .	Puedes implementar la lógica para visualizar u ocultar el formulario en un solo método público. Para ello, agregue el siguiente código a la clase `CustomerForm`:
+>>>>>>> Actualizacion del documento
 
 [source, java]
 ----
@@ -453,13 +480,21 @@ public void setCustomer(Customer customer) {
 . Cuando el `customer` está:
 
 [start=1]
+<<<<<<< HEAD
+. `nulo`, el formulario está oculta.
+=======
 . `nulo`, el formulario está oculto.
+>>>>>>> Actualizacion del documento
 
 . no es `nulo`, se muestra el formulario y el cursor del teclado y se coloca en el campo de entrada *First Name* para permitir la escritura inmediata.
 
 *Implementación de las operaciones Guardar y borrar*
 
+<<<<<<< HEAD
+.	Para asegurar que las operaciones de guardar y eliminar actualicen la lista de customers de la clase `MainView`, necesitamos agregar una referencia a esta clase. Tú puede recibir esta referencia en el constructor del `CustomerForm` de la siguiente manera:
+=======
 .	Para asegurar que las operaciones de guardar y eliminar actualicen la lista de customers de la clase `MainView`, necesitamos agregar una referencia a esta clase. Tú puedes recibir esta referencia en el constructor del `CustomerForm` de la siguiente manera:
+>>>>>>> Actualizacion del documento
 
 [source, java]
 ----
